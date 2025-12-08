@@ -8,12 +8,16 @@
 import Foundation
 import UIKit
 
-class CustomizationViewModel: ObservableObject {
-    @Published var compressionValue: Double = 100.0
+struct CustomizationViewModel {
+    var compressionValue: Double = 100.0
 
-    @Published var resizeValue: Double = 0.0
+    var resizeValue: Double = 0.0
     
-    @Published var displayImage: UIImage?
+    var displayImage: UIImage = UIImage()
+    var originalImage: UIImage = UIImage()
     
-    @Published var originalImage: UIImage = UIImage()
+    mutating func setOriginalImage(_ image: UIImage) {
+        originalImage = image
+        displayImage = image
+    }
 }

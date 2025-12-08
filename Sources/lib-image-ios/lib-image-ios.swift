@@ -63,25 +63,21 @@ struct ImageProcessingSliderView: View {
 }
 
 struct ImageProcessingView: View {
-    @State private var compressionValue = 100.0
-    @State private var compressionText = "0"
-    @State private var showCompression = false
+    @Binding var viewModel: CustomizationViewModel
 
-    @State private var resizeValue = 0.0
-    @State private var resizeText = "0"
-    @State private var showResize = false
-
-    @State private var dimensions: String = "0x0"
-    @State private var size: Int = 0
-    @State private var smsCount: Int = 0
+    @State var showCompression: Bool = false
+    @State var compressionText: String = "100.0"
+    @State var resizeText: String = "100.0"
+    @State var showResize: Bool = false
     
-    @State private var displayImage: UIImage?
-    @State var originalImage: UIImage
+    @State var dimensions: String = "0x0"
+    @State var size: Int = 0
+    @State var smsCount: Int = 0
 
     var body: some View {
         VStack {
             VStack {
-                Image(uiImage: displayImage ?? UIImage())
+                Image(uiImage: viewModel.displayImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 
@@ -101,7 +97,7 @@ struct ImageProcessingView: View {
                 ImageProcessingSliderView(
                     title: "Compression (Quality)",
                     show: $showCompression,
-                    value: $compressionValue,
+                    value: $viewModel.compressionValue,
                     text: $compressionText,
                 ) {
                     processImage()
@@ -113,7 +109,7 @@ struct ImageProcessingView: View {
                 ImageProcessingSliderView(
                     title: "Resize",
                     show: $showResize,
-                    value: $resizeValue,
+                    value: $viewModel.resizeValue,
                     text: $resizeText,
                 ) {
                     processImage()
@@ -121,8 +117,8 @@ struct ImageProcessingView: View {
             }
             .padding()
             .onAppear {
-                compressionText = "\(compressionValue)"
-                resizeText = "\(resizeValue)"
+                compressionText = "\(viewModel.compressionValue)"
+                resizeText = "\(viewModel.resizeValue)"
             }
             Spacer()
             
@@ -131,18 +127,17 @@ struct ImageProcessingView: View {
             }
         }
         .onAppear {
-            displayImage = originalImage
             processImage()
         }
     }
     
     func processImage() {
         Task {
-            let currentImage = originalImage
-            let currentQuality = Float(compressionValue)
+            let currentImage = viewModel.originalImage
+            let currentQuality = Float(viewModel.compressionValue)
             
-            var width = currentImage.size.width - ((resizeValue/100) * currentImage.size.width)
-            var height = currentImage.size.height - ((resizeValue/100) * currentImage.size.height)
+            var width = currentImage.size.width - ((viewModel.resizeValue/100) * currentImage.size.width)
+            var height = currentImage.size.height - ((viewModel.resizeValue/100) * currentImage.size.height)
             if(width == 0) { width = 1 }
             if(height == 0) { height = 1 }
 
@@ -163,17 +158,19 @@ struct ImageProcessingView: View {
                     )
                 )
             }.value
-            displayImage = UIImage(data: data)!
+            viewModel.displayImage = UIImage(data: data)!
             dimensions =
-            "\(Int(displayImage!.size.width))x\(Int(displayImage!.size.height))"
+            "\(Int(viewModel.displayImage.size.width))x\(Int(viewModel.displayImage.size.height))"
             size = Int(Double(data.count) / 1024.0)
             smsCount = Int(Double(data.count) / 160)
         }
     }
 }
 
-#Preview {
-    ImageProcessingView(
-        originalImage: UIImage(packageResource: "c_2077", ofType: "jpg")!
-    )
+struct ImageProcessingView_Preview: PreviewProvider {
+    @State static var customObject = CustomizationViewModel()
+    static var previews: some View {
+        customObject.originalImage = UIImage(packageResource: "c_2077", ofType: "jpg")!
+        return ImageProcessingView(viewModel: $customObject)
+    }
 }
