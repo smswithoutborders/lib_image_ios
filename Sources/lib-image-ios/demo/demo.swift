@@ -20,7 +20,9 @@ struct demo: View {
         NavigationView {
             VStack {
                 NavigationLink(
-                    destination: ImageProcessingView(viewModel: $viewModel),
+                    destination: ImageProcessingView(viewModel: $viewModel){
+                        imageViewActive.toggle()
+                    },
                     isActive: $imageViewActive
                 ) {
                     EmptyView()

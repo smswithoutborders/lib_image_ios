@@ -92,6 +92,7 @@ struct ImageProcessingView: View {
     @State var smsCount: Int = 0
     
     @State private var animate = false
+    @State var execution: () -> Void
 
     var body: some View {
         VStack {
@@ -152,7 +153,7 @@ struct ImageProcessingView: View {
             Spacer()
             
             Button("Apply") {
-                
+                execution()
             }
             .disabled(animate)
         }
@@ -208,7 +209,7 @@ struct ImageProcessingView_Preview: PreviewProvider {
         var model = CustomizationViewModel()
         model.setImage(image)
         
-        return ImageProcessingView(viewModel: .constant(model))
+        return ImageProcessingView(viewModel: .constant(model)){}
     }
 }
 
