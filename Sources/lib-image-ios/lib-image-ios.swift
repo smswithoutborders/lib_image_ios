@@ -107,7 +107,8 @@ struct ImageProcessingView: View {
                     processImage()
                 }
                 
-                Spacer().frame(height: 42)
+                Divider()
+                    .padding()
 
                 ImageProcessingSliderView(
                     title: "Resize",
@@ -115,7 +116,7 @@ struct ImageProcessingView: View {
                     value: $resizeValue,
                     text: $resizeText,
                 ) {
-                    
+                    processImage()
                 }
             }
             .padding()
@@ -140,11 +141,22 @@ struct ImageProcessingView: View {
             let currentImage = originalImage
             let currentQuality = Float(compressionValue)
             
+            var width = currentImage.size.width - ((resizeValue/100) * currentImage.size.width)
+            var height = currentImage.size.height - ((resizeValue/100) * currentImage.size.height)
+            if(width == 0) { width = 1 }
+            if(height == 0) { height = 1 }
+
             let data = try await Task.detached(priority: .userInitiated) {
                 print("[+] Compressing image: \(currentQuality)")
+                UIGraphicsBeginImageContext(
+                    CGSizeMake(width, height))
+                currentImage.draw(in: CGRectMake(0, 0, width, height))
+                let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+                UIGraphicsEndImageContext()
+                
                 let encoder = WebPEncoder()
                 return try encoder.encode(
-                    currentImage,
+                    newImage,
                     config: .preset(
                         .picture,
                         quality: currentQuality
