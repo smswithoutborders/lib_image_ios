@@ -100,18 +100,23 @@ struct ImageProcessingView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 
-                HStack {
-                    Text("Res: \(dimensions) | Qua: \(compressionText) | Rez: \(resizeText)")
-                        .bold()
-                }.padding(.bottom, 16)
-                HStack {
-                    Text("~ SMS: \(smsCount) <-> Size: \(size) KB")
-                        .bold()
+                VStack {
+                    HStack {
+                        Text("Res: \(dimensions) | Qua: \(compressionText) | Rez: \(resizeText)")
+                            .bold()
+                    }
+                    Spacer().frame(height: 16)
+                    HStack {
+                        Text("~ SMS: \(smsCount) <-> Size: \(size) KB")
+                            .bold()
+                    }
                 }
+                .padding()
             }
             
             Divider()
-            
+                .padding()
+
             VStack {
                 ImageProcessingSliderView(
                     title: "Compression (Quality)",
