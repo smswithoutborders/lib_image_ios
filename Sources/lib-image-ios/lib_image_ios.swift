@@ -62,21 +62,6 @@ struct ImageProcessingSliderView: View {
     }
 }
 
-struct ImageProcessingStatsCardView: View {
-    @State var name: String
-    @Binding var value: Int
-
-    var body: some View {
-        VStack {
-            Text(name)
-            Text(String(value))
-        }
-        .padding()
-        .background(Color.accentColor)
-        .cornerRadius(8)
-    }
-}
-
 struct ImageProcessingView: View {
     @State private var compressionValue = 100.0
     @State private var compressionText = "0"
@@ -100,14 +85,16 @@ struct ImageProcessingView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 
-//                Spacer().frame(height: 32)
                 HStack {
-                    Text("Res: \(dimensions) - Qua: \(compressionText) - Rez: \(resizeText)")
+                    Text("Res: \(dimensions) | Qua: \(compressionText) | Rez: \(resizeText)")
+                        .bold()
+                }.padding(.bottom, 16)
+                HStack {
+                    Text("~ SMS: \(smsCount) <-> Size: \(size) KB")
                         .bold()
                 }
             }
             
-            Spacer().frame(height: 42)
             Divider()
             
             VStack {
@@ -136,14 +123,6 @@ struct ImageProcessingView: View {
                 compressionText = "\(compressionValue)"
                 resizeText = "\(resizeValue)"
             }
-            Spacer()
-            
-            HStack {
-                ImageProcessingStatsCardView(name: "approx. SMS", value: $smsCount)
-                Spacer().frame(width: 32)
-                ImageProcessingStatsCardView(name: "Size (KB)", value: $size)
-            }
-
             Spacer()
             
             Button("Apply") {
