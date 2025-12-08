@@ -197,11 +197,13 @@ struct ImageProcessingView: View {
 }
 
 struct ImageProcessingView_Preview: PreviewProvider {
-    @State static var customObject = CustomizationViewModel()
-    @State static var image = UIImage(packageResource: "c_2077", ofType: "jpg")!
     static var previews: some View {
-        customObject.setImage(image)
-        return ImageProcessingView(viewModel: $customObject)
+        let image = UIImage(packageResource: "c_2077", ofType: "jpg")!
+        
+        var model = CustomizationViewModel()
+        model.setImage(image)
+        
+        return ImageProcessingView(viewModel: .constant(model))
     }
 }
 
