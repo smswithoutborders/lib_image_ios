@@ -16,7 +16,7 @@ struct CustomizationViewModel {
     var displayImage: UIImage = UIImage()
     var originalImage: UIImage = UIImage()
     
-    mutating func setOriginalImage(_ image: UIImage) {
+    mutating func setImage(_ image: UIImage) {
         originalImage = image
         displayImage = image
     }

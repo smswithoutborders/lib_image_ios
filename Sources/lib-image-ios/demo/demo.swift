@@ -34,7 +34,7 @@ struct demo: View {
                         Task {
                             if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
                                 let renderer = ImageRenderer(content: loaded)
-                                viewModel.setOriginalImage(renderer.uiImage!)
+                                viewModel.setImage(renderer.uiImage!)
                                 avatarItem = nil
                                 imageViewActive = true
                             } else {

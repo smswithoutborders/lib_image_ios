@@ -8,6 +8,7 @@ struct ImageProcessingSliderView: View {
     @Binding var show: Bool
     @Binding var value: Double
     @Binding var text: String
+    @Binding var enabled: Bool
     @State var execution: () -> Void
     
     var body: some View {
@@ -29,6 +30,7 @@ struct ImageProcessingSliderView: View {
                             .frame(width: 25, height: 25)
                     }
                 }
+                .disabled(enabled)
             }
             if(show) {
                 Slider(
@@ -62,6 +64,21 @@ struct ImageProcessingSliderView: View {
     }
 }
 
+struct ImageProcessingAnimatedView: View {
+    @Binding var showAnimation: Bool
+    @State var animate = false
+    var body: some View {
+        if(showAnimation) {
+            if #available(iOS 14.0, *) {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+}
+
 struct ImageProcessingView: View {
     @Binding var viewModel: CustomizationViewModel
 
@@ -73,6 +90,8 @@ struct ImageProcessingView: View {
     @State var dimensions: String = "0x0"
     @State var size: Int = 0
     @State var smsCount: Int = 0
+    
+    @State private var animate = false
 
     var body: some View {
         VStack {
@@ -99,6 +118,7 @@ struct ImageProcessingView: View {
                     show: $showCompression,
                     value: $viewModel.compressionValue,
                     text: $compressionText,
+                    enabled: $animate
                 ) {
                     processImage()
                 }
@@ -111,6 +131,7 @@ struct ImageProcessingView: View {
                     show: $showResize,
                     value: $viewModel.resizeValue,
                     text: $resizeText,
+                    enabled: $animate
                 ) {
                     processImage()
                 }
@@ -120,11 +141,15 @@ struct ImageProcessingView: View {
                 compressionText = "\(viewModel.compressionValue)"
                 resizeText = "\(viewModel.resizeValue)"
             }
+            
+            Spacer()
+            ImageProcessingAnimatedView(showAnimation: $animate)
             Spacer()
             
             Button("Apply") {
                 
             }
+            .disabled(animate)
         }
         .onAppear {
             processImage()
@@ -133,6 +158,7 @@ struct ImageProcessingView: View {
     
     func processImage() {
         Task {
+            animate = true
             let currentImage = viewModel.originalImage
             let currentQuality = Float(viewModel.compressionValue)
             
@@ -163,14 +189,23 @@ struct ImageProcessingView: View {
             "\(Int(viewModel.displayImage.size.width))x\(Int(viewModel.displayImage.size.height))"
             size = Int(Double(data.count) / 1024.0)
             smsCount = Int(Double(data.count) / 160)
+            
+            animate = false
         }
     }
+    
 }
 
 struct ImageProcessingView_Preview: PreviewProvider {
     @State static var customObject = CustomizationViewModel()
+    @State static var image = UIImage(packageResource: "c_2077", ofType: "jpg")!
     static var previews: some View {
-        customObject.originalImage = UIImage(packageResource: "c_2077", ofType: "jpg")!
+        customObject.setImage(image)
         return ImageProcessingView(viewModel: $customObject)
     }
+}
+
+#Preview {
+    @State var animate = true
+    ImageProcessingAnimatedView(showAnimation: $animate)
 }
