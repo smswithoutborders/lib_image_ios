@@ -13,15 +13,17 @@ public struct ImageCustomizationViewModel {
 
     var resizeValue: Double = 0.0
     
-    var displayImage: UIImage = UIImage()
+    public var displayImage: UIImage = UIImage()
     var originalImage: UIImage = UIImage()
     
-    mutating func setImage(_ image: UIImage) {
+    public init(){}
+    
+    public mutating func setImage(_ image: UIImage) {
         originalImage = image
         displayImage = image
     }
     
-    mutating func setDisplayImage(_ image: UIImage) {
+    public mutating func setDisplayImage(_ image: UIImage) {
         displayImage = image
     }
 }
