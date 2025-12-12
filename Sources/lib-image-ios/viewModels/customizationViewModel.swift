@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct CustomizationViewModel {
+public struct ImageCustomizationViewModel {
     var compressionValue: Double = 100.0
 
     var resizeValue: Double = 0.0

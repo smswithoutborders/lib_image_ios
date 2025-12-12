@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 17.0, *)
 struct demo: View {
-    @State var viewModel = CustomizationViewModel()
+    @State var viewModel = ImageCustomizationViewModel()
     
     @State private var avatarItem: PhotosPickerItem?
     

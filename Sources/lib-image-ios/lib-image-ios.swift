@@ -80,7 +80,7 @@ struct ImageProcessingAnimatedView: View {
 }
 
 struct ImageProcessingView: View {
-    @Binding var viewModel: CustomizationViewModel
+    @Binding var viewModel: ImageCustomizationViewModel
 
     @State var showCompression: Bool = false
     @State var compressionText: String = "100.0"
@@ -208,7 +208,7 @@ struct ImageProcessingView_Preview: PreviewProvider {
     static var previews: some View {
         let image = UIImage(packageResource: "c_2077", ofType: "jpg")!
         
-        var model = CustomizationViewModel()
+        var model = ImageCustomizationViewModel()
         model.setImage(image)
         
         return ImageProcessingView(viewModel: .constant(model)){_ in }
