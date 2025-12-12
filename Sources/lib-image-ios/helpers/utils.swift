@@ -13,7 +13,7 @@ import SwiftUI
      Header = Base64 encoded string (12)
      Body = String encoded bytes
  */
-func divideImagePayload(
+public func divideImagePayload(
     payload: [UInt8],
     version: UInt8,
     sessionId: UInt8,
