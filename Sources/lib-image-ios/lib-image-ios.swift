@@ -107,7 +107,8 @@ public struct ImageProcessingView: View {
                 Image(uiImage: viewModel.displayImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                
+                    .frame(width: .infinity, height: 250)
+
                 VStack {
                     HStack {
                         Text("Res: \(dimensions) | Qua: \(compressionText) | Rez: \(resizeText)")
@@ -181,8 +182,7 @@ public struct ImageProcessingView: View {
             if(height == 0) { height = 1 }
 
             let data = try await Task.detached(priority: .userInitiated) {
-                UIGraphicsBeginImageContext(
-                    CGSizeMake(width, height))
+                UIGraphicsBeginImageContext(CGSizeMake(width, height))
                 currentImage.draw(in: CGRectMake(0, 0, width, height))
                 let newImage = UIGraphicsGetImageFromCurrentImageContext()!
                 UIGraphicsEndImageContext()
