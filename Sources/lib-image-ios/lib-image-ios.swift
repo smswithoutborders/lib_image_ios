@@ -95,6 +95,11 @@ public struct ImageProcessingView: View {
     @State private var rawBytes: [UInt8] = []
     @State var execution: ([UInt8]) -> Void
     
+    public init(viewModel: Binding<ImageCustomizationViewModel>, execution: @escaping ([UInt8]) -> Void) {
+        _viewModel = viewModel
+        self.execution = execution
+    }
+    
 
     public var body: some View {
         VStack {
