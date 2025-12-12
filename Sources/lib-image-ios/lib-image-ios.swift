@@ -92,7 +92,9 @@ struct ImageProcessingView: View {
     @State var smsCount: Int = 0
     
     @State private var animate = false
-    @State var execution: () -> Void
+    @State private var rawBytes: [UInt8] = []
+    @State var execution: ([UInt8]) -> Void
+    
 
     var body: some View {
         VStack {
@@ -153,7 +155,7 @@ struct ImageProcessingView: View {
             Spacer()
             
             Button("Apply") {
-                execution()
+                execution(rawBytes)
             }
             .disabled(animate)
         }
@@ -174,7 +176,6 @@ struct ImageProcessingView: View {
             if(height == 0) { height = 1 }
 
             let data = try await Task.detached(priority: .userInitiated) {
-                print("[+] Compressing image: \(currentQuality)")
                 UIGraphicsBeginImageContext(
                     CGSizeMake(width, height))
                 currentImage.draw(in: CGRectMake(0, 0, width, height))
@@ -190,11 +191,12 @@ struct ImageProcessingView: View {
                     )
                 )
             }.value
-            viewModel.displayImage = UIImage(data: data)!
+            viewModel.setDisplayImage(UIImage(data: data)!)
             dimensions =
             "\(Int(viewModel.displayImage.size.width))x\(Int(viewModel.displayImage.size.height))"
             size = Int(Double(data.count) / 1024.0)
             smsCount = Int(Double(data.count) / 160)
+            rawBytes = [UInt8](data)
             
             animate = false
         }
@@ -209,7 +211,7 @@ struct ImageProcessingView_Preview: PreviewProvider {
         var model = CustomizationViewModel()
         model.setImage(image)
         
-        return ImageProcessingView(viewModel: .constant(model)){}
+        return ImageProcessingView(viewModel: .constant(model)){_ in }
     }
 }
 

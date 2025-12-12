@@ -15,15 +15,43 @@ struct demo: View {
     @State private var avatarItem: PhotosPickerItem?
     
     @State private var imageViewActive = false
+    @State private var displayPayloadActive = false
     
+    @State private var imageTransmissionPayloads: [ImageTransmissionPayload] = []
+
     var body: some View {
         NavigationView {
             VStack {
                 NavigationLink(
-                    destination: ImageProcessingView(viewModel: $viewModel){
-                        imageViewActive.toggle()
+                    destination: ImageProcessingView(viewModel: $viewModel){ image in
+                        Task {
+                            print("[+] Image count: \(image.count)")
+                            do {
+                                let dp = divideImagePayload(
+                                    payload: [UInt8](Data(image).base64EncodedData()),
+                                    version: 1,
+                                    sessionId: 2,
+                                    imageLength: UInt16(image.count),
+                                    textLength: 0
+                                )
+                                imageViewActive.toggle()
+                                if(dp != nil) {
+                                    imageTransmissionPayloads = ImageTransmissionPayload.fromString(itp: dp!)
+                                    displayPayloadActive.toggle()
+                                }
+                            } catch {
+                                print(error)
+                            }
+                        }
                     },
                     isActive: $imageViewActive
+                ) {
+                    EmptyView()
+                }
+                
+                NavigationLink(
+                    destination: PayloadDisplay(transmissionPayloads: imageTransmissionPayloads),
+                    isActive: $displayPayloadActive
                 ) {
                     EmptyView()
                 }
@@ -53,10 +81,17 @@ struct demo: View {
     }
 }
 
-#Preview {
-    if #available(iOS 17.0, *) {
+//#Preview {
+//    if #available(iOS 17.0, *) {
+//        demo()
+//    } else {
+//        // Fallback on earlier versions
+//    }
+//}
+
+@available(iOS 17.0, *)
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
         demo()
-    } else {
-        // Fallback on earlier versions
     }
 }

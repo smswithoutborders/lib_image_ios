@@ -20,4 +20,8 @@ struct CustomizationViewModel {
         originalImage = image
         displayImage = image
     }
+    
+    mutating func setDisplayImage(_ image: UIImage) {
+        displayImage = image
+    }
 }
