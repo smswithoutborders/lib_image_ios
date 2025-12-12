@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageTransmissionPayload: Identifiable {
+public struct ImageTransmissionPayload: Identifiable {
     var version: UInt8
     var sessionId: UInt8
     var segNumber: UInt8
@@ -17,7 +17,7 @@ struct ImageTransmissionPayload: Identifiable {
     
     var payload: String
     
-    let id = UUID()
+    public let id = UUID()
     
     public static func fromString(itp: [String]) -> [ImageTransmissionPayload] {
         var payloads: [ImageTransmissionPayload] = []

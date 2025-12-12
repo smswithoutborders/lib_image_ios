@@ -79,7 +79,7 @@ struct ImageProcessingAnimatedView: View {
     }
 }
 
-struct ImageProcessingView: View {
+public struct ImageProcessingView: View {
     @Binding var viewModel: ImageCustomizationViewModel
 
     @State var showCompression: Bool = false
@@ -96,7 +96,7 @@ struct ImageProcessingView: View {
     @State var execution: ([UInt8]) -> Void
     
 
-    var body: some View {
+    public var body: some View {
         VStack {
             VStack {
                 Image(uiImage: viewModel.displayImage)
