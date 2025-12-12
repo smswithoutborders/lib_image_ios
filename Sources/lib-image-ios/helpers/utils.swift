@@ -8,6 +8,11 @@
 import Foundation
 import SwiftUI
 
+/**
+ Payload :=
+     Header = Base64 encoded string (12)
+     Body = String encoded bytes
+ */
 func divideImagePayload(
     payload: [UInt8],
     version: UInt8,
