@@ -36,14 +36,10 @@ func divideImagePayload(
             metaData += [numberOfSegments] + withUnsafeBytes(of: imageLength.littleEndian) { Array($0) }
             + withUnsafeBytes(of: textLength.littleEndian) { Array($0) }
         }
-        print("[+] Meta data: \(metaData)")
         
         let size = min(encodedPayload.count, (STANDARD_SEGMENT_SIZE - STANDARD_ENCODED_HEADER_SIZE))
-        print("[+] Meta size: \(size)")
-        print("[+] Meta payload - prefixed: \(encodedPayload.prefix(size))")
 
         let prefix = String(bytes: encodedPayload.prefix(size), encoding: .utf8) ?? ""
-        print("[+] Storing prefix [\(segmentNumber)]: \(prefix)")
         
         // comes up empty
         let buffer = Data(metaData).base64EncodedString() + prefix
@@ -55,8 +51,6 @@ func divideImagePayload(
         segmentNumber = UInt8(Int(segmentNumber) + 1)
         dividedImage.append(buffer)
     } while(!encodedPayload.isEmpty)
-    
-    print("[==>] working with: \(dividedImage[0])")
     
     if var header = Data(base64Encoded: String(dividedImage[0].prefix(12))){
         header[3] = UInt8(dividedImage.count)
