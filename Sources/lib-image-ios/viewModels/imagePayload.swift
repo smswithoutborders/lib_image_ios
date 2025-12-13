@@ -19,6 +19,24 @@ public struct ImageTransmissionPayload: Identifiable {
     
     public let id = UUID()
     
+    public init(
+        version: UInt8,
+        sessionId: UInt8,
+        segNumber: UInt8,
+        numberSegments: UInt8? = nil,
+        imageLength: [UInt8]? = nil,
+        textLength: [UInt8]? = nil,
+        payload: String
+    ) {
+        self.version = version
+        self.sessionId = sessionId
+        self.segNumber = segNumber
+        self.numberSegments = numberSegments
+        self.imageLength = imageLength
+        self.textLength = textLength
+        self.payload = payload
+    }
+    
     public static func fromString(itp: [String]) -> [ImageTransmissionPayload] {
         var payloads: [ImageTransmissionPayload] = []
         for i in 0..<itp.count {
