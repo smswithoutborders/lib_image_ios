@@ -8,14 +8,14 @@
 import Foundation
 
 public struct ImageTransmissionPayload: Identifiable {
-    var version: UInt8
-    var sessionId: UInt8
-    var segNumber: UInt8
-    var numberSegments: UInt8?
-    var imageLength: [UInt8]?
-    var textLength: [UInt8]?
+    public var version: UInt8
+    public var sessionId: UInt8
+    public var segNumber: UInt8
+    public var numberSegments: UInt8?
+    public var imageLength: [UInt8]?
+    public var textLength: [UInt8]?
     
-    var payload: String
+    public var payload: String
     
     public let id = UUID()
     
