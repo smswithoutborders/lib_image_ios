@@ -165,7 +165,7 @@ public struct ImageProcessingView: View {
             }
             .disabled(animate)
         }
-        .onAppear {
+        .task {
             processImage()
         }
     }
