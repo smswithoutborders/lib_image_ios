@@ -24,7 +24,7 @@ public struct ImageCustomizationViewModel {
     public mutating func setImage(_ image: UIImage) {
         originalImage = image
         (wr, hr) = simplifiedImageRatio(image)
-        edit()
+//        edit()
         displayImage = image
     }
     
