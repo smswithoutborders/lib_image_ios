@@ -88,7 +88,8 @@ public struct ImageCustomizationViewModel {
                     quality: currentQuality
                 )
             )
-            setDisplayImage(UIImage(data: data)!)
+//            setDisplayImage(UIImage(data: data)!)
+            displayImage = UIImage(data: data)!
             
             return data
         } catch {
