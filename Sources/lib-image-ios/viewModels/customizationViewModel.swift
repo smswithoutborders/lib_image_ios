@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import WebP
 
 public struct ImageCustomizationViewModel {
     var compressionValue: Double = 25.0
@@ -63,6 +64,36 @@ public struct ImageCustomizationViewModel {
         let g = gcd(w, h)
         return (w / g, h / g)
     }
+    
+    public mutating func processImage() throws -> Data {
+        let currentImage = originalImage
+        let currentQuality = Float(compressionValue)
+        
+        var width = currentImage.size.width - ((resizeValue/100) * currentImage.size.width)
+        var height = currentImage.size.height - ((resizeValue/100) * currentImage.size.height)
+        if(width == 0) { width = 1 }
+        if(height == 0) { height = 1 }
 
+        UIGraphicsBeginImageContext(CGSizeMake(width, height))
+        currentImage.draw(in: CGRectMake(0, 0, width, height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        let encoder = WebPEncoder()
+        do {
+            let data = try encoder.encode(
+                newImage,
+                config: .preset(
+                    .picture,
+                    quality: currentQuality
+                )
+            )
+            setDisplayImage(UIImage(data: data)!)
+            
+            return data
+        } catch {
+            throw error
+        }
+    }
     
 }

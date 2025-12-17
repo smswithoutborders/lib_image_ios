@@ -173,36 +173,16 @@ public struct ImageProcessingView: View {
     func processImage() {
         Task {
             animate = true
-            let currentImage = viewModel.originalImage
-            let currentQuality = Float(viewModel.compressionValue)
-            
-            var width = currentImage.size.width - ((viewModel.resizeValue/100) * currentImage.size.width)
-            var height = currentImage.size.height - ((viewModel.resizeValue/100) * currentImage.size.height)
-            if(width == 0) { width = 1 }
-            if(height == 0) { height = 1 }
-
-            let data = try await Task.detached(priority: .userInitiated) {
-                UIGraphicsBeginImageContext(CGSizeMake(width, height))
-                currentImage.draw(in: CGRectMake(0, 0, width, height))
-                let newImage = UIGraphicsGetImageFromCurrentImageContext()!
-                UIGraphicsEndImageContext()
-                
-                let encoder = WebPEncoder()
-                return try encoder.encode(
-                    newImage,
-                    config: .preset(
-                        .picture,
-                        quality: currentQuality
-                    )
-                )
-            }.value
-            viewModel.setDisplayImage(UIImage(data: data)!)
-            dimensions =
-            "\(Int(viewModel.displayImage.size.width))x\(Int(viewModel.displayImage.size.height))"
-            size = Int(Double(data.count) / 1024.0)
-            smsCount = Int(Double(data.count) / 160)
-            rawBytes = [UInt8](data)
-            
+            do {
+                let data = try viewModel.processImage()
+                dimensions =
+                "\(Int(viewModel.displayImage.size.width))x\(Int(viewModel.displayImage.size.height))"
+                size = Int(Double(data.count) / 1024.0)
+                smsCount = Int(Double(data.count) / 160)
+                rawBytes = [UInt8](data)
+            } catch {
+                print(error)
+            }
             animate = false
         }
     }
