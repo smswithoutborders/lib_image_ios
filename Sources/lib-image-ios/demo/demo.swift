@@ -29,7 +29,7 @@ struct demo: View {
                             do {
                                 let dp = divideImagePayload(
                                     payload: [UInt8](Data(image).base64EncodedData()),
-                                    version: 1,
+                                    version: 4,
                                     sessionId: 2,
                                     imageLength: UInt16(image.count),
                                     textLength: 0
