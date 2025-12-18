@@ -52,13 +52,36 @@ public func divideImagePayload(
         dividedImage.append(buffer)
     } while(!encodedPayload.isEmpty)
     
-    if var header = Data(base64Encoded: String(dividedImage[0].prefix(12))){
-        header[3] = UInt8(dividedImage.count)
-        dividedImage[0].replaceSubrange(String.Index(encodedOffset: 0)..<String.Index(encodedOffset: 12),
-                                        with: header.base64EncodedString())
-    } else {
-        print("Failed to adjust headers")
+//    if var header = Data(base64Encoded: String(dividedImage[0].prefix(12))){
+//        header[3] = UInt8(dividedImage.count)
+//        dividedImage[0].replaceSubrange(String.Index(encodedOffset: 0)..<String.Index(encodedOffset: 12),
+//                                        with: header.base64EncodedString())
+//    } else {
+//        print("Failed to adjust headers")
+//        return nil
+//    }
+    let original = dividedImage[0]
+
+    let start = original.startIndex
+    let end = original.index(start, offsetBy: 12)
+
+    guard
+        let headerData = Data(base64Encoded: String(original[start..<end])),
+        headerData.count >= 4
+    else {
+        print("Failed to decode header")
         return nil
     }
+
+    var mutableHeader = headerData
+    mutableHeader[3] = UInt8(dividedImage.count)
+
+    let newHeader = mutableHeader.base64EncodedString()
+
+    guard newHeader.count == 12 else {
+        fatalError("Header size invariant broken")
+    }
+
+    dividedImage[0].replaceSubrange(start..<end, with: newHeader)
     return dividedImage
 }
